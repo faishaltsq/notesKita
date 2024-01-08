@@ -280,13 +280,21 @@ form h1{
   width: 100px;
   border: transparent  ;
 }
-.submit :hover{
-  background-color: #D9CD30;
-  color: whitesmoke;
 
+.submit {
+  background-color: whitesmoke;
+  border-radius: 7px;
+  width: 100px;
+  border: transparent;
 }
 
-@media only screen and (min-width: 500px) and (max-width: 800px) {
+.submit:hover {
+  background-color: lightgray;
+  cursor: pointer;
+}
+
+
+@media only screen and (min-width: 300px) and (max-width: 800px) {
   .notes-list {
     grid-template-columns: 1fr 1fr;
   }
@@ -294,6 +302,22 @@ form h1{
   .ReactModal__Content, .ReactModal__Content--after-open {
     width: 300px;
   }
+ 
+  .title-form{
+    display: none;
+  }
+  .form-area{
+    width: 350px;
+    height: 450px;
+    transition: all 0.5s ease-in;
+  }
+  form h1{
+    font-size: 35px;
+  }
+  .form-email,.form-password,.form-name{
+    width: 200px;
+    transition: all 0.5s ease-in;
+  } 
 }
 
 @media only screen and (min-width: 800px) and (max-width: 1200px) {
