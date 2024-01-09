@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { getInitialData } from '../utils/data';
 
@@ -8,116 +8,119 @@ import AppBody from './Body';
 import Header from './Header';
 import Footer from './Footer';
 
-import 'react-toastify/dist/ReactToastify.min.css';
-import autoBind from 'auto-bind';
-import Login from './login';
-import Register from './register';
-
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
 class NotesApp extends React.Component {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            notes: getInitialData(),
-            unfilteredNotes: getInitialData()
-        }
-        autoBind(this);
-    }
+  constructor(props) {
+    super(props);
 
-    addNewNoteHandler(newNoteData) {
-        try {
-            this.setState((prevState) => {
-                return {
-                    notes: [ newNoteData, ...prevState.notes, ],
-                    unfilteredNotes: [ newNoteData, ...prevState.unfilteredNotes, ]
-                }
-            })
-            return {
-                error: false,
-                message: 'Success!'
-            }
-        }
-        catch (error) {
-            return {
-                error: true,
-                message: 'Failed!'
-            }
-        }
-    }
+    this.state = {
+      notes: getInitialData(),
+      unfilteredNotes: getInitialData(),
+      loading: false,
+    };
+  }
 
-    onDeleteHandler(id) {
-        const result = window.confirm('Are you sure you want to delete this?');
-        if (result) {
-            this.setState((prevState) => {
-                return {
-                    notes: prevState.notes.filter(note => note.id !== id),
-                    unfilteredNotes: prevState.unfilteredNotes.filter(note => note.id !== id),
-                }
-            })
-            toast.success('Note deleted!');
-        } else {
-            toast.error('Deletion cancelled!');
-        }
-    }
+  addNewNoteHandler(newNoteData) {
+    this.setState((prevState) => {
+      const newNotes = [
+        ...prevState.notes,
+        newNoteData,
+      ];
+      return {
+        notes: newNotes,
+        unfilteredNotes: newNotes,
+        loading: false,
+      };
+    });
 
-    onArchiveHandler(id) {
-        const noteToModify = this.state.unfilteredNotes.filter(note => note.id === id)[0];
-        const modifiedNote = { ...noteToModify, archived: !noteToModify.archived };
-        this.setState((prevState) => {
-            return {
-                notes: [
-                    ...prevState.notes.filter(note => note.id !== id),
-                    modifiedNote
-                ],
-                unfilteredNotes: [
-                    ...prevState.unfilteredNotes.filter(note => note.id !== id),
-                    modifiedNote
-                ],
-            }
-        });
-        if (noteToModify.archived) {
-            toast.success('Note moved to active!');
-        } else {
-            toast.success('Note archived!');
-        }
-    }
+    toast.success('Note added!');
+  }
 
-    onSearchHandler(text) {
-        if (text.length !== 0 && text.trim() !== '') {
-            this.setState({
-                notes: this.state.unfilteredNotes.filter(note => note.title.toLowerCase().includes(text.toLowerCase())),
-            })
-        } else {
-            this.setState({
-                notes: this.state.unfilteredNotes,
-            })
-        }
+  onDeleteHandler(id) {
+    const result = window.confirm('Are you sure you want to delete this?');
+    if (result) {
+      this.setState((prevState) => {
+        const newNotes = prevState.notes.filter(note => note.id !== id);
+        const newUnfilteredNotes = prevState.unfilteredNotes.filter(note => note.id !== id);
+        return {
+          notes: newNotes,
+          unfilteredNotes: newUnfilteredNotes,
+          loading: false,
+        };
+      });
+      toast.success('Note deleted!');
     }
-    
-    render() {
-        return (
+  }
 
-                <div>
-                    <Login />
-                    {/* <Header onSearch={this.onSearchHandler}/>
-                    <AppBody notes={this.state.notes} addNewNote={this.addNewNoteHandler} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} />
-                    <Footer />
-                    <ToastContainer 
-                        position="bottom-right"
-                        autoClose={3000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                    /> */}
-                </div>
-        )
+  onArchiveHandler(id) {
+    const noteToModify = this.state.unfilteredNotes.filter(note => note.id === id)[0];
+    const modifiedNote = { ...noteToModify, archived: !noteToModify.archived };
+    this.setState((prevState) => {
+      const newNotes = [
+        ...prevState.notes.filter(note => note.id !== id),
+        modifiedNote,
+      ];
+      const newUnfilteredNotes = [
+        ...prevState.unfilteredNotes.filter(note => note.id !== id),
+        modifiedNote,
+      ];
+      return {
+        notes: newNotes,
+        unfilteredNotes: newUnfilteredNotes,
+        loading: false,
+      };
+    });
+    if (noteToModify.archived) {
+      toast.success('Note moved to active!');
+    } else {
+      toast.success('Note archived!');
     }
+  }
+
+  onSearchHandler(text) {
+    this.setState({
+      loading: true,
+    });
+    // Fetch notes from API
+    // ...
+    this.setState({
+      loading: false,
+      notes: filteredNotes,
+    });
+  }
+
+
+  componentDidMount() {
+    // Fetch notes from API
+    // ...
+  }
+
+
+  render() {
+    return (
+        
+      <div>
+        
+        <Header onSearch={this.onSearchHandler}/>
+        <AppBody notes={this.state.notes} addNewNote={this.addNewNoteHandler} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} />
+        <Footer />
+        <ToastContainer 
+          position="bottom-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </div>
+    );
+  }
 }
 
 export default NotesApp;

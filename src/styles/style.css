@@ -293,6 +293,19 @@ form h1{
   cursor: pointer;
 }
 
+.button-logout{
+  border-radius: 5px;
+  background-color: #ff5f52;
+  color: whitesmoke;
+  padding: 3px;
+  margin: 10px;
+}
+.button-logout:hover{
+  background-color: #b00020;
+  cursor: pointer;
+
+}
+
 
 @media only screen and (min-width: 300px) and (max-width: 800px) {
   .notes-list {

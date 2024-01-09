@@ -3,41 +3,54 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-
-
-
-
-
+import { useNavigate,Link } from "react-router-dom";
 
 const Register = () => {
+  const [username, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const [username, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const handleLinkClick = () => {
 
-    const navigate = useNavigate();
-    
-    const handleRegister = () =>{
-        axios.post("http://localhost:3000/",{
-            username: username,
-            email: email,
-            password: password
-        })
-        .then(function (response){
-            console.log(response);
-            navigate("/login")
-        })
-        .catch(function (error){
-            console.log(error);
-            if(error.response.status === 401){
-                alert("invalid credentials")
-            }
-        }
-        );
+  }
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Perform input validation (add your rules here)
+      if (!username.trim()) {
+        throw new Error("Username tidak boleh kosong");
+      }
+      // ... other validation rules
+
+      // Send registration request to Flask API
+      const response = await axios.post("http://localhost:3000/register", {
+        username,
+        email,
+        password,
+      });
+
+      // Handle successful registration
+      if (response.data.success) {
+        alert("Registration successful!");
+        navigate("/login");
+      } else {
+        setError("Registration failed: " + response.data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      setError("An error occurred during registration");
+    } finally {
+      setIsLoading(false);
     }
-
-
+  };
   
 
 
@@ -80,11 +93,10 @@ const Register = () => {
                     <div className="register-form">
                         <button className="submit" type="button">Register</button>
                         <p>
-                            Already have an account? <a href="./login.jsx">Login</a>
+                            Already have an account? <Link to="/login">Login</Link> 
                         </p>
                     </div>
                 </form>
-                {isRegistered && <p>Registration successful!</p>}
             </div>
         </div>
     );

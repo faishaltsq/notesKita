@@ -2,10 +2,10 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import NotesApp from './components/NotesApp';
+import App from './components/homepage';
 
 // import style
 import './styles/style.css';
 
 const root = createRoot(document.getElementById('root'));
-root.render(<NotesApp />);
+root.render(<App />);

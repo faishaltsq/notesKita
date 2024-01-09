@@ -4,38 +4,57 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-import { Link } from "react-router-dom";
-import { BrowserRouter as Router } from "react-router-dom"; // Add this line
+import { useNavigate,Link } from "react-router-dom";
+import Register from "./register";
 
 const Login = () => {
-        const [email, setEmail] = useState("");
-        const [password, setPassword] = useState("");
-        
-        const navigate = useNavigate();
-        const handleLogin = () =>{
-            if(email.length === 0){
-                alert("Email tidak boleh kosong")
-            } else if(password.length === 0){
-                alert("Password tidak boleh kosong")
-            } else {
-                axios.post("http://localhost:3000/login",{
-                    email: email,
-                    password: password
-                })
-                .then(function (response){
-                    console.log(response);
-                    navigate("/notes")
-                })
-                .catch(function (error){
-                    console.log(error);
-                    if(error.response.status === 401){
-                        alert("invalid credentials")
-                    }
-                });
-            }
-     
-        }
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLinkClick = () => {
+
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Perform input validation
+      if (!email.trim()) {
+        throw new Error("Email tidak boleh kosong");
+      }
+      if (!password.trim()) {
+        throw new Error("Password tidak boleh kosong");
+      }
+
+      // Send login request to Flask API
+      const response = await axios.post("http://localhost:3000/login", {
+        email,
+        password,
+      });
+
+      // Successful login
+      if (response.data.success) {
+        // Store authentication token securely
+        // Consider using a safer storage mechanism like HttpOnly cookies
+        localStorage.setItem("token", response.data.token);
+        navigate("/homepage");
+      } else {
+        setError("Invalid credentials");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("An error occurred while logging in");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
         return (
           <div className="form-login">
@@ -69,7 +88,7 @@ const Login = () => {
                 </button>
                 <div className="register-form">
                   <p>
-                    Don't have an account? <Link to="/register">Register</Link>
+                    Don't have an account? <Link to="/register" onClick={handleLinkClick}>Register</Link>
                   </p>
                 </div>
               </form>
