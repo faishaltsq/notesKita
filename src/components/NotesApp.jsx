@@ -13,6 +13,8 @@ import autoBind from 'auto-bind';
 import Login from './login';
 import Register from './register';
 
+
+
 class NotesApp extends React.Component {
     constructor(props) {
         super(props);
@@ -96,8 +98,8 @@ class NotesApp extends React.Component {
     
     render() {
         return (
+
                 <div>
-                    {/* <Register /> */}
                     <Login />
                     {/* <Header onSearch={this.onSearchHandler}/>
                     <AppBody notes={this.state.notes} addNewNote={this.addNewNoteHandler} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} />

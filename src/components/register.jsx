@@ -2,22 +2,45 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
+
+
+
+
+
 
 const Register = () => {
+
+    const [username, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
-    const [isRegistered, setIsRegistered] = useState(false);
 
-    const handleRegister = (e) => {
-        e.preventDefault();
+    const navigate = useNavigate();
+    
+    const handleRegister = () =>{
+        axios.post("http://localhost:3000/",{
+            username: username,
+            email: email,
+            password: password
+        })
+        .then(function (response){
+            console.log(response);
+            navigate("/login")
+        })
+        .catch(function (error){
+            console.log(error);
+            if(error.response.status === 401){
+                alert("invalid credentials")
+            }
+        }
+        );
+    }
 
-        // Perform registration logic here
-        // For example, you can send a request to an API endpoint to register the user
 
-        // Assuming the registration is successful, update the state
-        setIsRegistered(true);
-    };
+  
+
+
 
     return (
         <div className="form-register">
@@ -32,7 +55,7 @@ const Register = () => {
                             className="form-name"
                             type="name"
                             placeholder="Name"
-                            value={name}
+                            value={username}
                             onChange={(e) => setName(e.target.value)}
                         />
                     </div>
@@ -57,7 +80,7 @@ const Register = () => {
                     <div className="register-form">
                         <button className="submit" type="button">Register</button>
                         <p>
-                            Already have an account? <a href="/login">Login</a>
+                            Already have an account? <a href="./login.jsx">Login</a>
                         </p>
                     </div>
                 </form>
