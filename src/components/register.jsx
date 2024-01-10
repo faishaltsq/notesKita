@@ -13,9 +13,7 @@ const Register = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleLinkClick = () => {
-
-  }
+ 
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -26,15 +24,25 @@ const Register = () => {
     try {
       // Perform input validation (add your rules here)
       if (!username.trim()) {
-        throw new Error("Username tidak boleh kosong");
+        alert("Username tidak boleh kosong");
+      }else if(!email.trim()){
+        alert("Email tidak boleh kosong");
+      } else if (!password.trim()) {
+        alert("Password tidak boleh kosong");
       }
+      
+      
       // ... other validation rules
 
       // Send registration request to Flask API
-      const response = await axios.post("http://localhost:3000/register", {
+      const response = await axios.post("http://127.0.0.1:5000/api/v1/users", {
         username,
         email,
         password,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       // Handle successful registration
@@ -91,9 +99,9 @@ const Register = () => {
                         />
                     </div>
                     <div className="register-form">
-                        <button className="submit" type="button">Register</button>
+                        <button className="submit" type="submit">Register</button>
                         <p>
-                            Already have an account? <Link to="/login">Login</Link> 
+                            Already have an account? <Link to="/">Login</Link> 
                         </p>
                     </div>
                 </form>

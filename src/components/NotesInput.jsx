@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Add import statement for the CSS file
 
 const toastId1 = 'toast-1';
 const toastId2 = 'toast-2';

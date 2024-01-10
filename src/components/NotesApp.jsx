@@ -1,15 +1,16 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { getInitialData } from '../utils/data';
 
 import AppBody from './Body';
 import Header from './Header';
 import Footer from './Footer';
+import axios from 'axios';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { Navigate, useNavigate } from 'react-router-dom';
-
+import autoBind from 'auto-bind';
 
 class NotesApp extends React.Component {
 
@@ -20,7 +21,8 @@ class NotesApp extends React.Component {
       notes: getInitialData(),
       unfilteredNotes: getInitialData(),
       loading: false,
-    };
+    }
+    autoBind(this);
   }
 
   addNewNoteHandler(newNoteData) {
@@ -55,48 +57,59 @@ class NotesApp extends React.Component {
     }
   }
 
-  onArchiveHandler(id) {
+
+
+onArchiveHandler(id) {
     const noteToModify = this.state.unfilteredNotes.filter(note => note.id === id)[0];
     const modifiedNote = { ...noteToModify, archived: !noteToModify.archived };
-    this.setState((prevState) => {
-      const newNotes = [
-        ...prevState.notes.filter(note => note.id !== id),
-        modifiedNote,
-      ];
-      const newUnfilteredNotes = [
-        ...prevState.unfilteredNotes.filter(note => note.id !== id),
-        modifiedNote,
-      ];
-      return {
-        notes: newNotes,
-        unfilteredNotes: newUnfilteredNotes,
+    
+    // Update note in the database
+    axios.put(`/api/notes/${id}`, modifiedNote)
+        .then(() => { // Remove unused variable 'response'
+            this.setState((prevState) => {
+                const newNotes = [
+                    ...prevState.notes.filter(note => note.id !== id),
+                    modifiedNote,
+                ];
+                const newUnfilteredNotes = [
+                    ...prevState.unfilteredNotes.filter(note => note.id !== id),
+                    modifiedNote,
+                ];
+                return {
+                    notes: newNotes,
+                    unfilteredNotes: newUnfilteredNotes,
+                    loading: false,
+                };
+            });
+            if (noteToModify.archived) {
+                toast.success('Note moved to active!');
+            } else {
+                toast.success('Note archived!');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating note:', error);
+            toast.error('Failed to update note!');
+        });
+}
+
+// ...
+
+
+onSearchHandler() {
+    this.setState({
+        loading: true,
+    });
+    
+    
+    this.setState({
         loading: false,
-      };
+        notes: filteredNotes,
     });
-    if (noteToModify.archived) {
-      toast.success('Note moved to active!');
-    } else {
-      toast.success('Note archived!');
-    }
-  }
-
-  onSearchHandler(text) {
-    this.setState({
-      loading: true,
-    });
-    // Fetch notes from API
-    // ...
-    this.setState({
-      loading: false,
-      notes: filteredNotes,
-    });
-  }
+}
 
 
-  componentDidMount() {
-    // Fetch notes from API
-    // ...
-  }
+ 
 
 
   render() {
@@ -105,7 +118,7 @@ class NotesApp extends React.Component {
       <div>
         
         <Header onSearch={this.onSearchHandler}/>
-        <AppBody notes={this.state.notes} addNewNote={this.addNewNoteHandler} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} />
+        <AppBody notes={this.state.notes} addNewNote={this.addNewNoteHandler} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} onMount={this.componentDidMount}/>
         <Footer />
         <ToastContainer 
           position="bottom-right"

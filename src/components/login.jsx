@@ -5,7 +5,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate,Link } from "react-router-dom";
-import Register from "./register";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,9 +13,7 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleLinkClick = () => {
 
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,14 +24,14 @@ const Login = () => {
     try {
       // Perform input validation
       if (!email.trim()) {
-        throw new Error("Email tidak boleh kosong");
+        alert("Email tidak boleh kosong");
       }
       if (!password.trim()) {
-        throw new Error("Password tidak boleh kosong");
+        alert("Password tidak boleh kosong");
       }
 
       // Send login request to Flask API
-      const response = await axios.post("http://localhost:3000/login", {
+      const response = await axios.post("http://127.0.0.1:5000", {
         email,
         password,
       });
@@ -83,12 +80,12 @@ const Login = () => {
                   />
                 </div>
 
-                <button className="submit" type="button" onClick={handleLogin}>
+                <button className="submit" type="submit" onClick={handleLogin}>
                   Login
                 </button>
                 <div className="register-form">
                   <p>
-                    Don't have an account? <Link to="/register" onClick={handleLinkClick}>Register</Link>
+                    Don't have an account? <Link to="/register" >Register</Link>
                   </p>
                 </div>
               </form>
