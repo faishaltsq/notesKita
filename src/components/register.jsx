@@ -45,10 +45,10 @@ const Register = () => {
         },
       });
 
-      // Handle successful registration
-      if (response.data.success) {
+      
+      if (response.status == 200) {
         alert("Registration successful!");
-        navigate("/login");
+        navigate("/");
       } else {
         setError("Registration failed: " + response.data.error);
       }

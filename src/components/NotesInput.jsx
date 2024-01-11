@@ -1,8 +1,10 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Add import statement for the CSS file
+import axios from "axios";
 
 const toastId1 = 'toast-1';
 const toastId2 = 'toast-2';
@@ -43,26 +45,24 @@ const NotesInput = ({ addNewNote, closeModal }) => {
         } else if (formData.noteBody === '') {
             toast.error('Note body cannot be empty!', { toastId: toastId3 });
         } else {
-            const newData = {
-                id: +new Date(),
+            axios.post('http://127.0.0.1:5000/api/v1/notes',{
                 title: formData.title,
-                body: formData.noteBody,
+                description: formData.noteBody,
                 archived: false, 
                 createdAt: new Date(),
-            }
-            const result = addNewNote(newData);
-            if (!result.error) {
-                toast.success('New note saved!');
-                setFormData({
-                    ...formData,
-                    title: '',
-                    noteBody: '',
-                    noteBodyLength: 0
-                })
-                closeModal();
-            } else {
-                toast.error('New note failed to save!');
-            }
+                user_id: localStorage.getItem("user_id")
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response =>{
+                toast.success('Note added!');
+                
+            
+            })
+
+
+
         }
     }
 

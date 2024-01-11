@@ -11,40 +11,14 @@ const BtnLogout = () => {
   const handleLogout = async () => {
     setIsLoading(true);
     setError(null);
-
-
-    try {
-      // Buat permintaan API logout ke server backend
-      const response = await fetch('/api/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Masukkan token di sini
-        },
-      });
-
-      if (response.ok) {
         // Hapus token dan data user dari local storage
-        localStorage.removeItem("token");
-        localStorage.removeItem("username");
-        localStorage.removeItem("email");
-        localStorage.removeItem("id");
-        window.location.reload();
-        navigate("/")
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    
 
-        // Redirect ke halaman home
-        navigate("/");
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Logout gagal!');
-      }
-    } catch (error) {
-      alert( 'Logout gagal!')
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+    navigate("/")
   };
+        // Redirect ke halaman home
 
   return (
     <div>

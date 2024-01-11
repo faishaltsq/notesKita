@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-semi */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React from 'react';
@@ -18,8 +19,8 @@ class NotesApp extends React.Component {
     super(props);
 
     this.state = {
-      notes: getInitialData(),
-      unfilteredNotes: getInitialData(),
+      notes: getInitialData,
+      unfilteredNotes: getInitialData,
       loading: false,
     }
     autoBind(this);
@@ -43,54 +44,29 @@ class NotesApp extends React.Component {
 
   onDeleteHandler(id) {
     const result = window.confirm('Are you sure you want to delete this?');
-    if (result) {
-      this.setState((prevState) => {
-        const newNotes = prevState.notes.filter(note => note.id !== id);
-        const newUnfilteredNotes = prevState.unfilteredNotes.filter(note => note.id !== id);
-        return {
-          notes: newNotes,
-          unfilteredNotes: newUnfilteredNotes,
-          loading: false,
-        };
+
+    if(result){
+      axios.delete(`http://127.0.0.1:5000/api/v1/notes/${id}`)
+      .then(response =>{
+        toast.success('Note deleted!');
+        window.location.reload();
       });
-      toast.success('Note deleted!');
-    }
+    };
+
+    
+
   }
 
 
 
 onArchiveHandler(id) {
-    const noteToModify = this.state.unfilteredNotes.filter(note => note.id === id)[0];
-    const modifiedNote = { ...noteToModify, archived: !noteToModify.archived };
-    
-    // Update note in the database
-    axios.put(`/api/notes/${id}`, modifiedNote)
-        .then(() => { // Remove unused variable 'response'
-            this.setState((prevState) => {
-                const newNotes = [
-                    ...prevState.notes.filter(note => note.id !== id),
-                    modifiedNote,
-                ];
-                const newUnfilteredNotes = [
-                    ...prevState.unfilteredNotes.filter(note => note.id !== id),
-                    modifiedNote,
-                ];
-                return {
-                    notes: newNotes,
-                    unfilteredNotes: newUnfilteredNotes,
-                    loading: false,
-                };
-            });
-            if (noteToModify.archived) {
-                toast.success('Note moved to active!');
-            } else {
-                toast.success('Note archived!');
-            }
-        })
-        .catch(error => {
-            console.error('Error updating note:', error);
-            toast.error('Failed to update note!');
-        });
+
+  axios.put('http://127.0.0.1:5000/api/v1/notes/archive/'+id) 
+  .then((response) => {
+    window.location.reload();
+  })
+      
+       
 }
 
 // ...
@@ -118,7 +94,7 @@ onSearchHandler() {
       <div>
         
         <Header onSearch={this.onSearchHandler}/>
-        <AppBody notes={this.state.notes} addNewNote={this.addNewNoteHandler} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} onMount={this.componentDidMount}/>
+        <AppBody notes={this.state.notes} addNewNote={this.addNewNoteHandler} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} />
         <Footer />
         <ToastContainer 
           position="bottom-right"

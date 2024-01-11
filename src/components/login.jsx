@@ -31,19 +31,25 @@ const Login = () => {
       }
 
       // Send login request to Flask API
-      const response = await axios.post("http://127.0.0.1:5000", {
+      const response = await axios.post("http://127.0.0.1:5000/api/v1/users/login", {
         email,
         password,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-
+      
       // Successful login
-      if (response.data.success) {
-        // Store authentication token securely
-        // Consider using a safer storage mechanism like HttpOnly cookies
-        localStorage.setItem("token", response.data.token);
+      
+
+      if (response.status == 200) {
+        localStorage.setItem("email", response.data.values.email);
+        localStorage.setItem("user_id", response.data.values.id);
         navigate("/homepage");
       } else {
-        setError("Invalid credentials");
+        console.log("Login failed: " + response.data.error)
+        alert("Invalid credentials");
       }
     } catch (error) {
       console.error(error);
