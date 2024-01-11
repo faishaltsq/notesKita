@@ -5,6 +5,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate,Link } from "react-router-dom";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -47,6 +50,8 @@ const Login = () => {
         localStorage.setItem("email", response.data.values.email);
         localStorage.setItem("user_id", response.data.values.id);
         navigate("/homepage");
+        toast.success('Login Success!');
+        window.location.reload();
       } else {
         console.log("Login failed: " + response.data.error)
         alert("Invalid credentials");

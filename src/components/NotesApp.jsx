@@ -17,11 +17,13 @@ class NotesApp extends React.Component {
 
   constructor(props) {
     super(props);
-
+    
     this.state = {
+      
       notes: getInitialData,
       unfilteredNotes: getInitialData,
-      loading: false,
+      loading: true,
+
     }
     autoBind(this);
   }
@@ -35,7 +37,8 @@ class NotesApp extends React.Component {
       return {
         notes: newNotes,
         unfilteredNotes: newNotes,
-        loading: false,
+        loading: true,
+        window: window.location.reload(),
       };
     });
 
@@ -67,6 +70,10 @@ onArchiveHandler(id) {
   })
       
        
+}
+
+onEditHandler(id) {
+  
 }
 
 // ...

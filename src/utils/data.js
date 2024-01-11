@@ -37,53 +37,54 @@
 
 const getInitialData = []
 
-const user_id = localStorage.getItem('id')
-// console.log(user_id)
+const user_id = localStorage.getItem('user_id')
+console.log(user_id)
 
-axios.get(`http://127.0.0.1:5000/api/v1/notes/all/${user_id}`)
-.then((res) => {
-  // console.log(res.data.values)
-  const resData = res.data.values.map(
-    (item) => ({
-      id: item.id,
-      title: item.title,
-      body: item.body,
-      createdAt: item.createdAt,
-      archived: item.archived,
-    })
-  );
 
-  // console.log(resData)
-  resData.forEach((item) => {
-    getInitialData.push(item)
-  })
+// axios.get(`http://127.0.0.1:5000/api/v1/notes/all/${user_id}`)
+// .then((res) => {
+//   // console.log(res.data.values)
+//   const resData = res.data.values.map(
+//     (item) => ({
+//       id: item.id,
+//       title: item.title,
+//       body: item.body,
+//       createdAt: item.createdAt,
+//       archived: item.archived,
+//     })
+//   );
 
-  return resData;
-})
+//   // console.log(resData)
+//   resData.forEach((item) => {
+//     getInitialData.push(item)
+//   })
 
-// await fetch(`http://127.0.0.1:5000/api/v1/notes/all/${user_id}`)
-//     .then(res => res.json())
-//     .then(data => {
-//       console.log(data.values)
-//       const resData = data.values.map(
-//         (item) => ({
-//           id: item.id,
-//           title: item.title,
-//           body: item.body,
-//           createdAt: item.createdAt,
-//           archived: item.archived,
-//         })
-//       );
+//   return resData;
+// })
 
-//       console.log(resData)
-//       resData.forEach((item) => {
-//         getInitialData.push(item)
-//       })
+await fetch(`http://127.0.0.1:5000/api/v1/notes/all/${user_id}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data.values)
+      const resData = data.values.map(
+        (item) => ({
+          id: item.id,
+          title: item.title,
+          body: item.description,
+          createdAt: item.createdAt,
+          archived: item.archived,
+        })
+      );
 
-//       return resData;
-//     });
+      console.log(resData)
+      resData.forEach((item) => {
+        getInitialData.push(item)
+      })
 
-// console.log(getInitialData)
+      return resData;
+    });
+
+console.log(getInitialData)
     
 
 

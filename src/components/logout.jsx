@@ -12,11 +12,12 @@ const BtnLogout = () => {
     setIsLoading(true);
     setError(null);
         // Hapus token dan data user dari local storage
-    localStorage.removeItem("username");
-    localStorage.removeItem("email");
-    
-
+    // localStorage.removeItem("username");
+    // localStorage.removeItem("email");
+    // localStorage.removeItem("user_id");
+    localStorage.clear();
     navigate("/")
+    window.location.reload();
   };
         // Redirect ke halaman home
 

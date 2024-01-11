@@ -57,6 +57,7 @@ const NotesInput = ({ addNewNote, closeModal }) => {
                 },
             }).then(response =>{
                 toast.success('Note added!');
+                window.location.reload();
                 
             
             })

@@ -4,6 +4,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate,Link } from "react-router-dom";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
   const [username, setName] = useState("");
@@ -47,7 +49,7 @@ const Register = () => {
 
       
       if (response.status == 200) {
-        alert("Registration successful!");
+        alert('Registration Success')
         navigate("/");
       } else {
         setError("Registration failed: " + response.data.error);
